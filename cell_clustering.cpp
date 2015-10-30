@@ -282,7 +282,7 @@ static int cellMovementAndDuplication(float** posAll, float* pathTraveled, int* 
     return currentNumberCells;
 }
 
-static void runDiffusionClusterStep(float**** Conc, float** movVec, float** posAll, int* typesAll, int c, int L, float speed){
+static void runDiffusionClusterStep(float**** Conc, float** movVec, float** posAll, int* typesAll, int cc, int L, float speed){
   runDiffusionClusterStep_sw.reset();
   // computes movements of all cells based on gradients of the two substances
 
@@ -296,7 +296,7 @@ static void runDiffusionClusterStep(float**** Conc, float** movVec, float** posA
 
   L--;
 #pragma ivdep
-  for(c;c;c--){
+  for(c=0;c<cc;c++){
   //  while(c--){
 
     i1 = min((int)floor(posAll[c][0]/sideLength), L);
