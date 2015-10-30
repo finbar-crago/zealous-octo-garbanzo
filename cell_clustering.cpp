@@ -151,7 +151,9 @@ static void runDiffusionStep(float**** Conc, int L, float D){
 //#pragma omp parallel for collapse(3)
 #pragma ivdep
   for (i1 = 0; i1 < L; i1++){
+#pragma ivdep
     for (i2 = 0; i2 < L; i2++){
+#pragma ivdep
       for (i3 = 0; i3 < L; i3++){
 	xUp   = (i1+1);
 	xDown = (i1-1);
