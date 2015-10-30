@@ -100,6 +100,7 @@ static void produceSubstances(float**** Conc, float** posAll, int* typesAll, int
 
   float *C;
   int c, i1, i2, i3;
+#pragma ivdep
   for (c=0; c< n; c++){
     i1 = std::min((int)floor(posAll[c][0]/sideLength),(L-1));
     i2 = std::min((int)floor(posAll[c][1]/sideLength),(L-1));
@@ -126,6 +127,7 @@ static void runDiffusionStep(float**** Conc, int L, float D){
   float **Conc0_x, *Conc0_xy;
   float **Conc1_x, *Conc1_xy;
 
+#pragma omp parallel for collapse(3)
   for(i1 = 0; i1 < L; i1++){
     Conc0_x = Conc0[i1];
     Conc1_x = Conc1[i1];
@@ -145,7 +147,7 @@ static void runDiffusionStep(float**** Conc, int L, float D){
   float *C0, *tC0, *C1, *tC1;
 
   D = D/6;
-
+#pragma omp parallel for collapse(3)
   for (i1 = 0; i1 < L; i1++){
     for (i2 = 0; i2 < L; i2++){
       for (i3 = 0; i3 < L; i3++){
@@ -208,6 +210,7 @@ static void runDecayStep(float**** Conc, int L, float mu) {
     float **Conc1_x, *Conc1_xy;
 
     int i1,i2,i3;
+#pragma omp parallel for collapse(3)
     for (i1 = 0; i1 < L; i1++){
       Conc0_x = Conc0[i1];
       Conc1_x = Conc1[i1];
@@ -234,7 +237,7 @@ static int cellMovementAndDuplication(float** posAll, float* pathTraveled, int* 
     float currentCellMovement[3];
     float duplicatedCellOffset[3];
 
-
+#pragma ivdep
     for (c=0; c<n; c++) {
         // random cell movement
         currentCellMovement[0]=RandomFloatPos()-0.5;
@@ -348,6 +351,7 @@ static float getEnergy(float** posAll, int* typesAll, int n, float spatialRange,
     float extraClusterEnergy = 0.0;
     float nrSmallDist=0.0;
 
+#pragma ivdep
     for (i1 = 0; i1 < n; i1++) {
         posSubvol[i1] = new float[3];
         if ((fabs(posAll[i1][0]-0.5)<subVolMax) && (fabs(posAll[i1][1]-0.5)<subVolMax) && (fabs(posAll[i1][2]-0.5)<subVolMax)) {
@@ -359,6 +363,7 @@ static float getEnergy(float** posAll, int* typesAll, int n, float spatialRange,
         }
     }
 
+#pragma omp parallel for collapse(2)
     for (i1 = 0; i1 < nrCellsSubVol; i1++) {
         for (i2 = i1+1; i2 < nrCellsSubVol; i2++) {
             currDist =  getL2Distance(posSubvol[i1][0],posSubvol[i1][1],posSubvol[i1][2],posSubvol[i2][0],posSubvol[i2][1],posSubvol[i2][2]);
@@ -397,6 +402,7 @@ static bool getCriterion(float** posAll, int* typesAll, int n, float spatialRang
     int nrCellsSubVol = 0;
 
     // the locations of all cells within the subvolume are copied to array posSubvol
+#pragma ivdep
     for (i1 = 0; i1 < n; i1++) {
         posSubvol[i1] = new float[3];
         if ((fabs(posAll[i1][0]-0.5)<subVolMax) && (fabs(posAll[i1][1]-0.5)<subVolMax) && (fabs(posAll[i1][2]-0.5)<subVolMax)) {
@@ -429,6 +435,7 @@ static bool getCriterion(float** posAll, int* typesAll, int n, float spatialRang
         return false;
     }
 
+#pragma omp parallel for collapse(2)
     for (i1 = 0; i1 < nrCellsSubVol; i1++) {
         for (i2 = i1+1; i2 < nrCellsSubVol; i2++) {
             currDist =  getL2Distance(posSubvol[i1][0],posSubvol[i1][1],posSubvol[i1][2],posSubvol[i2][0],posSubvol[i2][1],posSubvol[i2][2]);
@@ -665,7 +672,7 @@ int main(int argc, char *argv[]) {
     int64_t n = 1; // initially, there is one single cell
 
     // Phase 1: Cells move randomly and divide until final number of cells is reached
-    while (n<finalNumberCells) {
+    while (n<finalNumberCells){
         produceSubstances(Conc, posAll, typesAll, L, n); // Cells produce substances. Depending on the cell type, one of the two substances is produced.
         runDiffusionStep(Conc, L, D); // Simulation of substance diffusion
         runDecayStep(Conc, L, mu);
@@ -698,6 +705,7 @@ int main(int argc, char *argv[]) {
     fprintf(stderr, "%-35s = %le\n", "INITIAL_ENERGY", energy);
 
     i = T;
+#pragma omp parallel for collapse(2)
     while(i--){
 
         if ((i%10) == 0) {
