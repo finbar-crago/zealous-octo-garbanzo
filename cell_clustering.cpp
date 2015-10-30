@@ -128,16 +128,14 @@ static void runDiffusionStep(float**** Conc, int L, float D){
   float **Conc0_x, *Conc0_xy;
   float **Conc1_x, *Conc1_xy;
 
-//#pragma omp parallel for collapse(3)
-#pragma ivdep
+#pragma parallel
   for(i1 = 0; i1 < L; i1++){
     Conc0_x = Conc0[i1];
     Conc1_x = Conc1[i1];
-
     for(i2 = 0; i2 < L; i2++){
 	Conc0_xy = Conc0_x[i2];
 	Conc1_xy = Conc1_x[i2];
-
+#pragma ivdep
 	for(i3 = 0; i3 < L; i3++){
 	  tempConc[0][i1][i2][i3] = Conc0_xy[i3];
 	  tempConc[1][i1][i2][i3] = Conc1_xy[i3];
