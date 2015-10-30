@@ -287,7 +287,7 @@ static void runDiffusionClusterStep(float**** Conc, float** movVec, float** posA
   int i1, i2, i3, xUp, xDown, yUp, yDown, zUp, zDown;
 
   L--;
-
+#pragma ivdep
   while(c--){
 
     i1 = min((int)floor(posAll[c][0]/sideLength), L);
@@ -316,9 +316,7 @@ static void runDiffusionClusterStep(float**** Conc, float** movVec, float** posA
       movVec[c][0]=typesAll[c]*(gradSub1[0]/normGrad1-gradSub2[0]/normGrad2)*speed;
       movVec[c][1]=typesAll[c]*(gradSub1[1]/normGrad1-gradSub2[1]/normGrad2)*speed;
       movVec[c][2]=typesAll[c]*(gradSub1[2]/normGrad1-gradSub2[2]/normGrad2)*speed;
-    }
-
-    else {
+    } else {
       movVec[c][0]=0;
       movVec[c][1]=0;
       movVec[c][2]=0;
