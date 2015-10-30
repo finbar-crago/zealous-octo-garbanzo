@@ -101,6 +101,7 @@ static void produceSubstances(float**** Conc, float** posAll, int* typesAll, int
   float *C;
   int c, i1, i2, i3;
 #pragma ivdep
+#pragma parallel
   for (c=0; c< n; c++){
     i1 = std::min((int)floor(posAll[c][0]/sideLength),(L-1));
     i2 = std::min((int)floor(posAll[c][1]/sideLength),(L-1));
@@ -150,6 +151,7 @@ static void runDiffusionStep(float**** Conc, int L, float D){
   D = D/6;
 //#pragma omp parallel for collapse(3)
 #pragma ivdep
+#pragma parallel
   for (i1 = 0; i1 < L; i1++){
 #pragma ivdep
     for (i2 = 0; i2 < L; i2++){
