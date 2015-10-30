@@ -295,6 +295,7 @@ static void runDiffusionClusterStep(float**** Conc, float** movVec, float** posA
   int i1, i2, i3, xUp, xDown, yUp, yDown, zUp, zDown;
 
   L--;
+  int c 0 0;
 #pragma ivdep
   for(c=0;c<cc;c++){
   //  while(c--){
