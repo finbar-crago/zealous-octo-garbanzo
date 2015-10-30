@@ -710,7 +710,8 @@ int main(int argc, char *argv[]) {
     fprintf(stderr, "%-35s = %le\n", "INITIAL_ENERGY", energy);
 
     i = T;
-#pragma omp parallel for collapse(2)
+//#pragma omp parallel for collapse(2)
+#pragma ivdep
     while(i--){
 
         if ((i%10) == 0) {
