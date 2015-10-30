@@ -296,7 +296,8 @@ static void runDiffusionClusterStep(float**** Conc, float** movVec, float** posA
 
   L--;
 #pragma ivdep
-  while(c--){
+  for(c;c;c--){
+  //  while(c--){
 
     i1 = min((int)floor(posAll[c][0]/sideLength), L);
     i2 = min((int)floor(posAll[c][1]/sideLength), L);
