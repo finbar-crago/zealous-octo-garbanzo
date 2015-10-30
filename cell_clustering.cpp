@@ -294,7 +294,7 @@ static void runDiffusionClusterStep(float**** Conc, float** movVec, float** posA
 
   L--;
 #pragma ivdep
-  while(c--){
+  for(c;c;c--){
 
     i1 = min((int)floor(posAll[c][0]/sideLength), L);
     i2 = min((int)floor(posAll[c][1]/sideLength), L);
@@ -677,14 +677,15 @@ int main(int argc, char *argv[]) {
     int64_t n = 1; // initially, there is one single cell
 
     // Phase 1: Cells move randomly and divide until final number of cells is reached
+
     while (n<finalNumberCells){
         produceSubstances(Conc, posAll, typesAll, L, n); // Cells produce substances. Depending on the cell type, one of the two substances is produced.
         runDiffusionStep(Conc, L, D); // Simulation of substance diffusion
         runDecayStep(Conc, L, mu);
         n = cellMovementAndDuplication(posAll, pathTraveled, typesAll, numberDivisions, pathThreshold, divThreshold, n);
 
-	c=n;
-        while(c--){
+#pragma ivdep
+        for(c=0;c<n;c++){
             // boundary conditions
 	    if(posAll[c][0]<0)      posAll[c][0]=0;
 	    else if(posAll[c][0]>1) posAll[c][0]=1;
@@ -709,10 +710,9 @@ int main(int argc, char *argv[]) {
     fprintf(stderr, "%-35s = %d\n",  "INITIAL_CRITERION", currCriterion);
     fprintf(stderr, "%-35s = %le\n", "INITIAL_ENERGY", energy);
 
-    i = T;
 //#pragma omp parallel for collapse(2)
 #pragma ivdep
-    while(i--){
+    for(i=0;i<T;i++){
 
         if ((i%10) == 0) {
             if(quiet < 1) {
@@ -731,8 +731,8 @@ int main(int argc, char *argv[]) {
         runDecayStep(Conc, L, mu);
         runDiffusionClusterStep(Conc, currMov, posAll, typesAll, n, L, speed);
 
-	c=n;
-        while(c--){
+#pragma ivdep
+	for(c=0; c<n; c++){
             posAll[c][0] = posAll[c][0]+currMov[c][0];
             posAll[c][1] = posAll[c][1]+currMov[c][1];
             posAll[c][2] = posAll[c][2]+currMov[c][2];
