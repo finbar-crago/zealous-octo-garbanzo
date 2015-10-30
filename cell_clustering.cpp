@@ -127,7 +127,8 @@ static void runDiffusionStep(float**** Conc, int L, float D){
   float **Conc0_x, *Conc0_xy;
   float **Conc1_x, *Conc1_xy;
 
-#pragma omp parallel for collapse(3)
+//#pragma omp parallel for collapse(3)
+#pragma ivdep
   for(i1 = 0; i1 < L; i1++){
     Conc0_x = Conc0[i1];
     Conc1_x = Conc1[i1];
@@ -147,7 +148,8 @@ static void runDiffusionStep(float**** Conc, int L, float D){
   float *C0, *tC0, *C1, *tC1;
 
   D = D/6;
-#pragma omp parallel for collapse(3)
+//#pragma omp parallel for collapse(3)
+#pragma ivdep
   for (i1 = 0; i1 < L; i1++){
     for (i2 = 0; i2 < L; i2++){
       for (i3 = 0; i3 < L; i3++){
@@ -210,7 +212,8 @@ static void runDecayStep(float**** Conc, int L, float mu) {
     float **Conc1_x, *Conc1_xy;
 
     int i1,i2,i3;
-#pragma omp parallel for collapse(3)
+//#pragma omp parallel for collapse(3)
+#pragma ivdep
     for (i1 = 0; i1 < L; i1++){
       Conc0_x = Conc0[i1];
       Conc1_x = Conc1[i1];
@@ -363,7 +366,8 @@ static float getEnergy(float** posAll, int* typesAll, int n, float spatialRange,
         }
     }
 
-#pragma omp parallel for collapse(2)
+//#pragma omp parallel for collapse(2)
+#pragma ivdep
     for (i1 = 0; i1 < nrCellsSubVol; i1++) {
         for (i2 = i1+1; i2 < nrCellsSubVol; i2++) {
             currDist =  getL2Distance(posSubvol[i1][0],posSubvol[i1][1],posSubvol[i1][2],posSubvol[i2][0],posSubvol[i2][1],posSubvol[i2][2]);
@@ -435,7 +439,8 @@ static bool getCriterion(float** posAll, int* typesAll, int n, float spatialRang
         return false;
     }
 
-#pragma omp parallel for collapse(2)
+//#pragma omp parallel for collapse(2)
+#pragma ivdep
     for (i1 = 0; i1 < nrCellsSubVol; i1++) {
         for (i2 = i1+1; i2 < nrCellsSubVol; i2++) {
             currDist =  getL2Distance(posSubvol[i1][0],posSubvol[i1][1],posSubvol[i1][2],posSubvol[i2][0],posSubvol[i2][1],posSubvol[i2][2]);
