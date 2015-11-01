@@ -123,10 +123,7 @@ static void runDiffusionStep(float**** Conc, int L, float D){
   int i1,i2,i3;
 
   float tempConc[2][L][L][L];
-
-  tempConc[:][:][:][:] = Conc[:][:][:][:];
-  tempConc[:][:][:][:] = Conc[1][:][:][:];
-
+  tempConc[0:2:1][0:L:1][0:L:1][0:L:1] = Conc[0:2:1][0:L:1][0:L:1][0:L:1];
 
   int xUp, xDown, yUp, yDown, zUp, zDown;
   float *C0, *tC0, *C1, *tC1;
