@@ -444,7 +444,6 @@ static bool getCriterion(float** posAll, int* typesAll, int n, float spatialRang
 
 //#pragma omp parallel for collapse(2)
 #pragma ivdep
-#pragma omp parallel for collapse(2)
     for (i1 = 0; i1 < nrCellsSubVol; i1++) {
         for (i2 = i1+1; i2 < nrCellsSubVol; i2++) {
             currDist =  getL2Distance(posSubvol[i1][0],posSubvol[i1][1],posSubvol[i1][2],posSubvol[i2][0],posSubvol[i2][1],posSubvol[i2][2]);
