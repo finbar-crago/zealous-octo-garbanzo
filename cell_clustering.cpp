@@ -104,10 +104,10 @@ static void produceSubstances(float**** Conc, float** posAll, int* typesAll, int
   int c, i1, i2, i3;
 #pragma ivdep
 #pragma parallel
-  for (c=0; c< n; c++){
-    i1 = std::min((int)floor(posAll[c][0]/sideLength),(L-1));
-    i2 = std::min((int)floor(posAll[c][1]/sideLength),(L-1));
-    i3 = std::min((int)floor(posAll[c][2]/sideLength),(L-1));
+  for(c=0; c< n; c++){
+    i1 = std::min((int)floor(posAll[c][0]/sideLength), L);
+    i2 = std::min((int)floor(posAll[c][1]/sideLength), L);
+    i3 = std::min((int)floor(posAll[c][2]/sideLength), L);
 
     C = &Conc[(!(typesAll[c]==1))][i1][i2][i3];
     *C = *C + 0.1;
