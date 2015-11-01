@@ -410,7 +410,6 @@ static bool getCriterion(float** posAll, int* typesAll, int n, float spatialRang
 
     // the locations of all cells within the subvolume are copied to array posSubvol
 #pragma ivdep
-#pragma omp parallel for
     for(i1 = 0; i1 < n; i1++){
         posSubvol[i1] = new float[3];
         if ((fabs(posAll[i1][0]-0.5)<subVolMax) && (fabs(posAll[i1][1]-0.5)<subVolMax) && (fabs(posAll[i1][2]-0.5)<subVolMax)) {
