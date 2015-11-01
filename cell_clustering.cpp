@@ -48,8 +48,8 @@ static inline float RandomFloatPos(){
 
 static inline float getNorm(float* currArray) {
   // computes L2 norm of input array
-  float d, arraySum=0;
-
+  //  float d, arraySum=0;
+  /*
   d = currArray[0] * currArray[0];
   arraySum = arraySum + d;
 
@@ -58,10 +58,12 @@ static inline float getNorm(float* currArray) {
 
   d = currArray[2] * currArray[2];
   arraySum = arraySum + d;
-
   arraySum = sqrt(arraySum);
 
   return arraySum;
+  */
+
+  return sqrt(powf(currArray[0:3],2.f));
 }
 
 static float getL2Distance(float pos1x, float pos1y, float pos1z, float pos2x, float pos2y, float pos2z){
