@@ -4,7 +4,7 @@ BUILD_HOST:=$(shell sh -c './BUILD-HOST-GEN')
 override CFLAGS += -DCOMPILER_VERSION=\"$(COMPILER_VERSION)\" -DBUILD_HOST=\"$(BUILD_HOST)\"
 
 cell_clustering: cell_clustering.cpp util.cpp util.hpp Makefile
-	$(CXX) -mmic -O3 -parallel -o $@ cell_clustering.cpp util.cpp $(CFLAGS) -Wall -lrt
+	$(CXX) -O3 -mmic -openmp -parallel -o $@ cell_clustering.cpp util.cpp $(CFLAGS) -Wall -lrt
 
 clean:
 	rm -rf cell_clustering

@@ -34,6 +34,8 @@
 #include <getopt.h>
 #include "util.hpp"
 
+#include <omp.h>
+
 using namespace std;
 
 static int quiet = 0;
@@ -128,7 +130,7 @@ static void runDiffusionStep(float**** Conc, int L, float D){
   float **Conc0_x, *Conc0_xy;
   float **Conc1_x, *Conc1_xy;
 
-#pragma parallel
+#pragma omp parallel for  collapse(3)
   for(i1 = 0; i1 < L; i1++){
     Conc0_x = Conc0[i1];
     Conc1_x = Conc1[i1];
@@ -147,11 +149,8 @@ static void runDiffusionStep(float**** Conc, int L, float D){
   float *C0, *tC0, *C1, *tC1;
 
   D = D/6;
-//#pragma omp parallel for collapse(3)
-#pragma ivdep
-#pragma parallel
+#pragma omp parallel for  collapse(3)
   for (i1 = 0; i1 < L; i1++){
-#pragma ivdep
     for (i2 = 0; i2 < L; i2++){
 #pragma ivdep
       for (i3 = 0; i3 < L; i3++){
@@ -297,6 +296,7 @@ static void runDiffusionClusterStep(float**** Conc, float** movVec, float** posA
   L--;
   int c = 0;
 #pragma ivdep
+#pragma omp parallel for
   for(c=0;c<cc;c++){
   //  while(c--){
 
