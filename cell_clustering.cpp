@@ -63,7 +63,8 @@ static inline float getNorm(float* currArray) {
   return arraySum;
   */
 
-  return sqrt(powf(currArray[0:3],2.f));
+  currArray[0:3] = powf(currArray[0:3],2.f);
+  return sqrt(currArray[0]+currArray[1]+currArray[2]);
 }
 
 static float getL2Distance(float pos1x, float pos1y, float pos1z, float pos2x, float pos2y, float pos2z){
