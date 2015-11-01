@@ -48,7 +48,6 @@ static inline float RandomFloatPos(){
 
 static inline float getNorm(float* currArray) {
   // computes L2 norm of input array
-  /*
   float d, arraySum=0;
 
   d = currArray[0] * currArray[0];
@@ -59,11 +58,9 @@ static inline float getNorm(float* currArray) {
 
   d = currArray[2] * currArray[2];
   arraySum = arraySum + d;
-  */
-  float arraySum;
-  currArray[0:3]  = currArray[0:3] * currArray[0:3];
-  arraySum = __sec_reduce_add(currArray[0:3]);
+
   arraySum = sqrt(arraySum);
+
   return arraySum;
 }
 
@@ -416,12 +413,12 @@ static bool getCriterion(float** posAll, int* typesAll, int n, float spatialRang
     for(i1 = 0; i1 < n; i1++){
         posSubvol[i1] = new float[3];
         if ((fabs(posAll[i1][0]-0.5)<subVolMax) && (fabs(posAll[i1][1]-0.5)<subVolMax) && (fabs(posAll[i1][2]-0.5)<subVolMax)) {
-	  posSubvol[nrCellsSubVol][0] = posAll[i1][0];
-	  posSubvol[nrCellsSubVol][1] = posAll[i1][1];
-	  posSubvol[nrCellsSubVol][2] = posAll[i1][2];
-	  // posSubvol[nrCellsSubVol][0:3:1] = posAll[i1][0:3:1];
-	  typesSubvol[nrCellsSubVol] = typesAll[i1];
-	  nrCellsSubVol++;
+            posSubvol[nrCellsSubVol][0] = posAll[i1][0];
+            posSubvol[nrCellsSubVol][1] = posAll[i1][1];
+            posSubvol[nrCellsSubVol][2] = posAll[i1][2];
+            typesSubvol[nrCellsSubVol] = typesAll[i1];
+
+            nrCellsSubVol++;
         }
     }
 
@@ -621,7 +618,8 @@ int main(int argc, char *argv[]) {
     bool currCriterion;
 
     // Initialization of the various arrays
-    for (i1 = 0; i1 < finalNumberCells; i1++) {
+#pragma omp parallel for
+    for(i1 = 0; i1 < finalNumberCells; i1++){
         currMov[i1] = new float[3];
         posAll[i1] = new float[3];
         pathTraveled[i1] = zeroFloat;
@@ -632,7 +630,6 @@ int main(int argc, char *argv[]) {
 
 	posAll[i1][0] = 0.5;
 	posAll[i1][1] = 0.5;
-
     }
 
     // create 3D concentration matrix
