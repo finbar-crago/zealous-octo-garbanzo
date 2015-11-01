@@ -618,6 +618,7 @@ int main(int argc, char *argv[]) {
     bool currCriterion;
 
     // Initialization of the various arrays
+#pragma ivdep
 #pragma omp parallel for
     for(i1 = 0; i1 < finalNumberCells; i1++){
         currMov[i1] = new float[3];
@@ -644,7 +645,9 @@ int main(int argc, char *argv[]) {
 
     float **Conc0_x, *Conc0_xy;
     float **Conc1_x, *Conc1_xy;
-    
+
+#pragma ivdep
+#pragma omp parallel for
     for(i2 = 0; i2 < L; i2++){
       Conc0[i2] = new float*[L];
       Conc1[i2] = new float*[L];
@@ -686,8 +689,10 @@ int main(int argc, char *argv[]) {
         runDecayStep(Conc, L, mu);
         n = cellMovementAndDuplication(posAll, pathTraveled, typesAll, numberDivisions, pathThreshold, divThreshold, n);
 
-	c=n;
-        while(c--){
+	//c=n;
+#pragma ivdep
+#pragma omp parallel for
+        for(c=0;c<n;c++){
             // boundary conditions
 	    if(posAll[c][0]<0)      posAll[c][0]=0;
 	    else if(posAll[c][0]>1) posAll[c][0]=1;
