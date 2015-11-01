@@ -212,8 +212,8 @@ static void runDecayStep(float**** Conc, int L, float mu) {
     float **Conc1_x, *Conc1_xy;
 
     int i1,i2,i3;
-//#pragma omp parallel for collapse(3)
 #pragma ivdep
+#pragma omp parallel for
     for (i1 = 0; i1 < L; i1++){
       Conc0_x = Conc0[i1];
       Conc1_x = Conc1[i1];
@@ -410,7 +410,8 @@ static bool getCriterion(float** posAll, int* typesAll, int n, float spatialRang
 
     // the locations of all cells within the subvolume are copied to array posSubvol
 #pragma ivdep
-    for (i1 = 0; i1 < n; i1++) {
+#pragma omp parallel for
+    for(i1 = 0; i1 < n; i1++){
         posSubvol[i1] = new float[3];
         if ((fabs(posAll[i1][0]-0.5)<subVolMax) && (fabs(posAll[i1][1]-0.5)<subVolMax) && (fabs(posAll[i1][2]-0.5)<subVolMax)) {
             posSubvol[nrCellsSubVol][0] = posAll[i1][0];
@@ -444,6 +445,7 @@ static bool getCriterion(float** posAll, int* typesAll, int n, float spatialRang
 
 //#pragma omp parallel for collapse(2)
 #pragma ivdep
+#pragma omp parallel for collapse(2)
     for (i1 = 0; i1 < nrCellsSubVol; i1++) {
         for (i2 = i1+1; i2 < nrCellsSubVol; i2++) {
             currDist =  getL2Distance(posSubvol[i1][0],posSubvol[i1][1],posSubvol[i1][2],posSubvol[i2][0],posSubvol[i2][1],posSubvol[i2][2]);
