@@ -692,7 +692,7 @@ int main(int argc, char *argv[]) {
 	//c=n;
 #pragma ivdep
 #pragma omp parallel for
-        for(c=0;c<n;c++){
+        for(c=n;c;--c){
             // boundary conditions
 	    if(posAll[c][0]<0)      posAll[c][0]=0;
 	    else if(posAll[c][0]>1) posAll[c][0]=1;
